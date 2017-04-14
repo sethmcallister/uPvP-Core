@@ -1,0 +1,5 @@
+name: uPvP-Core
+version: 1.0.0-SNAPSHOT
+main: us.upvp.core.natives.bungee.NativeBungeePlugin
+author: Wout Ceulemans
+website: www.woutdev.be
