@@ -13,7 +13,6 @@ import us.upvp.core.framework.ban.UBanManager;
 import us.upvp.core.framework.module.UModuleManager;
 import us.upvp.core.framework.mute.UMuteManager;
 import us.upvp.core.framework.registration.URegistrationManager;
-import us.upvp.core.framework.server.UServer;
 import us.upvp.core.framework.time.UTimeFormatter;
 import us.upvp.core.framework.user.UUserManager;
 import us.upvp.core.framework.util.UUUIDFetcher;
@@ -43,10 +42,10 @@ public class UCore implements Core
         this.banManager = new UBanManager();
         this.registrationManager = new URegistrationManager();
         this.muteManager = new UMuteManager();
-        this.moduleManager = new UModuleManager(((UServer) server).getPluginDir());
+        this.moduleManager = new UModuleManager(server);
         this.timeFormatter = new UTimeFormatter();
         this.uuidFetcher = new UUUIDFetcher(new ArrayList<String>());
-        this.logger = server.getLogger();
+        this.logger = getServer().getLogger();
         this.server = server;
         this.plugin = plugin;
     }

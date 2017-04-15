@@ -8,8 +8,12 @@ import java.util.List;
 public interface DataDriver<T>
 {
     T insert(T object);
+
     T update(T object);
+
     T delete(T object);
+
     T find(String id);
+
     List<T> findAll();
 }

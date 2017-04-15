@@ -1,7 +1,6 @@
 package us.upvp.core.framework.util;
 
 import com.google.common.collect.ImmutableList;
-import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -43,28 +42,6 @@ public class UUUIDFetcher implements UUIDFetcher, Callable<Map<String, UUID>>
         this.namesList = builder.build();
     }
 
-    public Map<String, UUID> call() throws Exception
-    {
-        Map<String, UUID> uuidMap = new HashMap<String, UUID>();
-        for (List<String> names : this.namesList)
-        {
-            String body = buildBody(names);
-            System.out.printf("Requesting %s%n", body);
-            HttpURLConnection connection = createConnection();
-            writeBody(connection, body);
-            JSONArray jsonArr = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
-            for (Object profile : jsonArr)
-            {
-                JSONObject jsonProfile = (JSONObject) profile;
-                String id = (String) jsonProfile.get("id");
-                String name = (String) jsonProfile.get("name");
-                UUID uuid = UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
-                uuidMap.put(name, uuid);
-            }
-        }
-        return uuidMap;
-    }
-
     private static void writeBody(HttpURLConnection connection, String body) throws Exception
     {
         DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
@@ -88,6 +65,30 @@ public class UUUIDFetcher implements UUIDFetcher, Callable<Map<String, UUID>>
     private static String buildBody(List<String> names)
     {
         return JSONValue.toJSONString(names);
+    }
+
+    public Map<String, UUID> call() throws Exception
+    {
+        Map<String, UUID> uuidMap = new HashMap<String, UUID>();
+        for (List<String> names : this.namesList)
+        {
+            String body = buildBody(names);
+            System.out.printf("Requesting %s%n", body);
+            HttpURLConnection connection = createConnection();
+            writeBody(connection, body);
+            JSONArray jsonArr = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+            for (Object profile : jsonArr)
+            {
+                JSONObject jsonProfile = (JSONObject) profile;
+                String id = (String) jsonProfile.get("id");
+                String name = (String) jsonProfile.get("name");
+                UUID uuid = UUID.fromString(
+                        id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" +
+                        id.substring(16, 20) + "-" + id.substring(20, 32));
+                uuidMap.put(name, uuid);
+            }
+        }
+        return uuidMap;
     }
 
     public UUID findByUsername(String s)

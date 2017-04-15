@@ -25,7 +25,9 @@ public class UBan implements Ban
         this.target = target;
         this.type = type;
         this.active = true;
-        this.simplifiedBanType = (type == BanType.BLACKLIST ? SimplifiedBanType.BLACKLIST : (type == BanType.IP_PERMANENT || type == BanType.NORMAL_PERMANENT) ? SimplifiedBanType.PERMANENT : SimplifiedBanType.TEMPORARILY);
+        this.simplifiedBanType = (
+                type == BanType.BLACKLIST ? SimplifiedBanType.BLACKLIST : (type == BanType.IP_PERMANENT || type ==
+                                                                                                           BanType.NORMAL_PERMANENT) ? SimplifiedBanType.PERMANENT : SimplifiedBanType.TEMPORARILY);
         this.reason = reason;
         this.bannedBy = bannedBy;
         this.expireDate = new Date();

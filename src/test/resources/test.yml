@@ -1,0 +1,9 @@
+string-example: "Hello World"
+char-example: 'i'
+short-example: 666
+int-example: 500000
+long-example: 9223372036854775807
+float-example: 6.99
+double-example: 44.54879255
+boolean-example: true
+object-example: "string"

@@ -34,13 +34,13 @@ public class UPluginModuleConfig implements PluginModuleConfig
     @Override
     public Character getChar(String s)
     {
-        return (Character) values.getOrDefault(s, null);
+        return ((String) values.getOrDefault(s, null)).toCharArray()[0];
     }
 
     @Override
     public Short getShort(String s)
     {
-        return (Short) values.getOrDefault(s, null);
+        return new Short(String.valueOf(values.getOrDefault(s, null)));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UPluginModuleConfig implements PluginModuleConfig
     @Override
     public Float getFloat(String s)
     {
-        return (Float) values.getOrDefault(s, null);
+        return Float.valueOf(String.valueOf(values.getOrDefault(s, null)));
     }
 
     @Override

@@ -7,6 +7,8 @@ import org.yaml.snakeyaml.Yaml;
 import us.upvp.api.framework.module.ModuleLoadException;
 import us.upvp.api.framework.module.ModuleManager;
 import us.upvp.api.framework.module.PluginModule;
+import us.upvp.api.framework.server.Server;
+import us.upvp.core.framework.server.UServer;
 import us.upvp.core.util.FileUtil;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.nio.file.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
@@ -27,11 +30,13 @@ public class UModuleManager implements ModuleManager
 {
     private final List<PluginModule> modules;
     private final Path dirPath;
+    private final Logger logger;
 
-    public UModuleManager(Path dirPath)
+    public UModuleManager(Server server)
     {
         this.modules = Lists.newArrayList();
-        this.dirPath = dirPath;
+        this.dirPath = ((UServer) server).getPluginDir();
+        this.logger = server.getLogger();
 
         loadModules(dirPath);
     }
@@ -54,7 +59,9 @@ public class UModuleManager implements ModuleManager
                                                        }
                                                        catch (ModuleLoadException e)
                                                        {
-                                                           System.err.print(e.getMessage());
+                                                           logger.warning(String.format(
+                                                                   "Failed to load module '%s' with message %s!",
+                                                                   p.getFileName(), e.getMessage()));
                                                        }
                                                    });
         }
@@ -75,7 +82,8 @@ public class UModuleManager implements ModuleManager
         {
             if (!Files.exists(path))
             {
-                return null;
+                throw new ModuleLoadException(
+                        String.format("Could not find module at path %s!", path.toAbsolutePath()));
             }
 
             JarFile file = new JarFile(path.toFile());
@@ -83,7 +91,8 @@ public class UModuleManager implements ModuleManager
 
             if (moduleYaml == null)
             {
-                return null;
+                throw new ModuleLoadException(
+                        String.format("Could not find module.yml at path %s!", path.toAbsolutePath()));
             }
 
             String moduleInfoString = CharStreams.toString(new InputStreamReader(
@@ -98,11 +107,13 @@ public class UModuleManager implements ModuleManager
             URLClassLoader child = new URLClassLoader(new URL[] { path.toUri().toURL() }, getClass().getClassLoader());
             Class mainClass = Class.forName(main, true, child);
 
-            return (PluginModule) mainClass.getConstructor(String.class, String.class).newInstance(name, version);
+            return (PluginModule) mainClass.newInstance();
         }
         catch (Exception e)
         {
-            throw new ModuleLoadException(String.format("Failed to load module %s!", path.getFileName().toString()));
+            throw new ModuleLoadException(
+                    String.format("Failed to load module %s! Message: %s", path.getFileName().toString(),
+                                  e.getMessage()));
         }
     }
 
@@ -156,7 +167,7 @@ public class UModuleManager implements ModuleManager
 
     public boolean isEnabled(PluginModule module)
     {
-        return modules.contains(module);
+        return modules.stream().anyMatch(m -> m.getModuleName().equalsIgnoreCase(module.getModuleName()));
     }
 
     @Override

@@ -28,9 +28,26 @@ public class NativeBungeePlugin extends Plugin
         boolean ok = loadConfig();
 
         if (ok)
-            server = new UServer(config.getString("server-name"), ServerType.PROXY, getLogger(), this, getDataFolder().toPath());
+        {
+            server = new UServer(config.getString("server-name"), ServerType.PROXY, getLogger(), this,
+                                 getDataFolder().toPath());
+        }
         else
+        {
             getProxy().stop();
+        }
+    }
+
+    @Override
+    public void onEnable()
+    {
+
+    }
+
+    @Override
+    public void onDisable()
+    {
+
     }
 
     private boolean loadConfig()
@@ -64,17 +81,5 @@ public class NativeBungeePlugin extends Plugin
             e.printStackTrace();
             return false;
         }
-    }
-
-    @Override
-    public void onEnable()
-    {
-
-    }
-
-    @Override
-    public void onDisable()
-    {
-
     }
 }

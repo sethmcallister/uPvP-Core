@@ -10,10 +10,10 @@ import us.upvp.core.framework.user.UUser;
  */
 public class DatabaseManager
 {
-    private final DataDriver<UUser> userDataDriver;
-    private final DataDriver<UBan> banDataDriver;
-    private final DataDriver<UMute> muteDataDriver;
-    private final DataDriver<UFaction> factionDataDriver;
+    private DataDriver<UUser> userDataDriver;
+    private DataDriver<UBan> banDataDriver;
+    private DataDriver<UMute> muteDataDriver;
+    private DataDriver<UFaction> factionDataDriver;
 
     public DatabaseManager()
     {

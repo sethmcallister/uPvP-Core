@@ -23,7 +23,8 @@ public class UMute implements Mute
     public UMute(String target, MuteType type, String reason, String mutedBy)
     {
         this.target = target;
-        this.simplifiedMuteType = (type == MuteType.IP_PERMANENT || type == MuteType.NORMAL_PERMANENT ? SimplifiedMuteType.PERMANENT : SimplifiedMuteType.TEMPORARILY);
+        this.simplifiedMuteType = (type == MuteType.IP_PERMANENT || type ==
+                                                                    MuteType.NORMAL_PERMANENT ? SimplifiedMuteType.PERMANENT : SimplifiedMuteType.TEMPORARILY);
         this.active = true;
         this.type = type;
         this.reason = reason;
@@ -35,7 +36,8 @@ public class UMute implements Mute
     public UMute(String target, MuteType type, String reason, String mutedBy, Date expireDate)
     {
         this.target = target;
-        this.simplifiedMuteType = (type == MuteType.IP_PERMANENT || type == MuteType.NORMAL_PERMANENT ? SimplifiedMuteType.PERMANENT : SimplifiedMuteType.TEMPORARILY);
+        this.simplifiedMuteType = (type == MuteType.IP_PERMANENT || type ==
+                                                                    MuteType.NORMAL_PERMANENT ? SimplifiedMuteType.PERMANENT : SimplifiedMuteType.TEMPORARILY);
         this.active = true;
         this.type = type;
         this.reason = reason;

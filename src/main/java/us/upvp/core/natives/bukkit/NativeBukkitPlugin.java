@@ -27,9 +27,26 @@ public class NativeBukkitPlugin extends JavaPlugin
         boolean ok = loadConfig();
 
         if (ok)
-            server = new UServer(config.getString("server-name"), ServerType.BUKKIT, getLogger(), this, getDataFolder().toPath());
+        {
+            server = new UServer(config.getString("server-name"), ServerType.BUKKIT, getLogger(), this,
+                                 getDataFolder().toPath());
+        }
         else
+        {
             Bukkit.getServer().shutdown();
+        }
+
+    }
+
+    @Override
+    public void onDisable()
+    {
+
+    }
+
+    @Override
+    public void onEnable()
+    {
 
     }
 
@@ -57,17 +74,5 @@ public class NativeBukkitPlugin extends JavaPlugin
         config = YamlConfiguration.loadConfiguration(filePath.toFile());
 
         return true;
-    }
-
-    @Override
-    public void onEnable()
-    {
-
-    }
-
-    @Override
-    public void onDisable()
-    {
-
     }
 }
