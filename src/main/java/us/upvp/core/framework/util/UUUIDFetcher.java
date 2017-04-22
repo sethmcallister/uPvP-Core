@@ -1,101 +1,20 @@
 package us.upvp.core.framework.util;
 
-import com.google.common.collect.ImmutableList;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
 import us.upvp.api.framework.util.UUIDFetcher;
 
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.Callable;
+import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Created by Wout on 14/04/2017.
  */
-public class UUUIDFetcher implements UUIDFetcher, Callable<Map<String, UUID>>
+public class UUUIDFetcher implements UUIDFetcher
 {
-    private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
-    private final JSONParser jsonParser = new JSONParser();
-    private final List<List<String>> namesList;
-
-    public UUUIDFetcher(List<String> names)
-    {
-        final ImmutableList.Builder<List<String>> builder = ImmutableList.builder();
-        int namesCopied = 0;
-        while (namesCopied < names.size())
-        {
-            builder.add(
-                    ImmutableList.copyOf(
-                            names.subList(
-                                    namesCopied,
-                                    Math.min(namesCopied + 100, names.size())
-                            )
-                    )
-            );
-            namesCopied += 100;
-        }
-        this.namesList = builder.build();
-    }
-
-    private static void writeBody(HttpURLConnection connection, String body) throws Exception
-    {
-        DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-        writer.write(body.getBytes());
-        writer.flush();
-        writer.close();
-    }
-
-    private static HttpURLConnection createConnection() throws Exception
-    {
-        URL url = new URL(PROFILE_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        return connection;
-    }
-
-    private static String buildBody(List<String> names)
-    {
-        return JSONValue.toJSONString(names);
-    }
-
-    public Map<String, UUID> call() throws Exception
-    {
-        Map<String, UUID> uuidMap = new HashMap<String, UUID>();
-        for (List<String> names : this.namesList)
-        {
-            String body = buildBody(names);
-            System.out.printf("Requesting %s%n", body);
-            HttpURLConnection connection = createConnection();
-            writeBody(connection, body);
-            JSONArray jsonArr = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
-            for (Object profile : jsonArr)
-            {
-                JSONObject jsonProfile = (JSONObject) profile;
-                String id = (String) jsonProfile.get("id");
-                String name = (String) jsonProfile.get("name");
-                UUID uuid = UUID.fromString(
-                        id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" +
-                        id.substring(16, 20) + "-" + id.substring(20, 32));
-                uuidMap.put(name, uuid);
-            }
-        }
-        return uuidMap;
-    }
-
     public UUID findByUsername(String s)
     {
         try
         {
-            return new UUUIDFetcher(Collections.singletonList(s)).call().get(s);
+            return new us.upvp.core.framework.util.UUIDFetcher(Collections.singletonList(s)).call().get(s);
         }
         catch (Exception ex)
         {

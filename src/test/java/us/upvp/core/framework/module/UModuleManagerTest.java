@@ -9,6 +9,8 @@ import org.junit.rules.TemporaryFolder;
 import us.upvp.api.framework.module.ModuleLoadException;
 import us.upvp.api.framework.module.ModuleManager;
 import us.upvp.api.framework.module.PluginModule;
+import us.upvp.api.framework.server.NativeFunctionality;
+import us.upvp.api.framework.server.ServerType;
 import us.upvp.core.framework.server.UServer;
 import us.upvp.core.util.FileUtil;
 
@@ -18,8 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Wout on 15/04/2017.
@@ -38,7 +40,12 @@ public class UModuleManagerTest
     {
         mockServer = mock(UServer.class);
 
+        NativeFunctionality nativeFunctionality = mock(NativeFunctionality.class);
+
         when(mockServer.getPluginDir()).thenReturn(tmpFolder.getRoot().toPath());
+        when(mockServer.getPlugin()).thenReturn(nativeFunctionality);
+        when(mockServer.getType()).thenReturn(ServerType.BUKKIT);
+        doNothing().when(nativeFunctionality).runAsync(any());
 
         FileUtil.createDirIfNotExists(Paths.get(tmpFolder.getRoot().getAbsolutePath(), "modules"));
 

@@ -3,25 +3,25 @@ package us.upvp.core.framework.module;
 import com.google.common.io.Resources;
 import org.junit.Before;
 import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
-import us.upvp.api.framework.module.PluginModuleConfig;
+import us.upvp.api.framework.config.Config;
+import us.upvp.core.framework.config.UConfig;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Wout on 15/04/2017.
  */
-public class UPluginModuleConfigTest
+public class UConfigTest
 {
-    private PluginModuleConfig config;
+    private Config config;
 
     @Before
     public void setUp() throws IOException
     {
-        config = new UPluginModuleConfig(Resources.toString(Resources.getResource("test.yml"), Charset.defaultCharset()));
+        config = new UConfig(Resources.toString(Resources.getResource("test.yml"), Charset.defaultCharset()));
         config.load();
     }
 

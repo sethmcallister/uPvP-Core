@@ -1,78 +1,62 @@
 package us.upvp.core.natives.bukkit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
+import us.upvp.api.framework.module.command.CommandListener;
+import us.upvp.api.framework.server.NativeFunctionality;
 import us.upvp.api.framework.server.Server;
 import us.upvp.api.framework.server.ServerType;
+import us.upvp.api.framework.user.User;
+import us.upvp.core.framework.config.UConfig;
 import us.upvp.core.framework.server.UServer;
-import us.upvp.core.util.FileUtil;
+import us.upvp.core.natives.bukkit.command.NativeBukkitCommand;
+import us.upvp.core.natives.bukkit.listener.AsyncPlayerPreLoginListener;
+import us.upvp.core.natives.bukkit.listener.PlayerQuitListener;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.lang.reflect.Method;
 
 /**
  * Created by Wout on 14/04/2017.
  */
-public class NativeBukkitPlugin extends JavaPlugin
+public class NativeBukkitPlugin extends JavaPlugin implements NativeFunctionality
 {
-    private Server server;
-    private YamlConfiguration config;
-
-    @Override
-    public void onLoad()
-    {
-        boolean ok = loadConfig();
-
-        if (ok)
-        {
-            server = new UServer(config.getString("server-name"), ServerType.BUKKIT, getLogger(), this,
-                                 getDataFolder().toPath());
-        }
-        else
-        {
-            Bukkit.getServer().shutdown();
-        }
-
-    }
-
-    @Override
-    public void onDisable()
-    {
-
-    }
-
     @Override
     public void onEnable()
     {
+        Server server = new UServer(ServerType.BUKKIT,
+                                    new UConfig(getDataFolder().toPath(), "config.yml", getResource("config.yml")),
+                                    getLogger(), getDataFolder().toPath(), this);
 
+        getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
     }
 
-    private boolean loadConfig()
+    @Override
+    public void sendMessage(User user, String message)
     {
-        Path dirPath = getDataFolder().toPath();
+        Bukkit.getPlayer(user.getUniqueId()).sendMessage(message);
+    }
 
-        FileUtil.createDirIfNotExists(dirPath);
+    @Override
+    public void runAsync(Runnable r)
+    {
+        getServer().getScheduler().runTaskAsynchronously(this, r);
+    }
 
-        Path filePath = Paths.get(dirPath.toAbsolutePath().toString(), "config.yml");
-
-        if (!Files.exists(filePath))
+    @Override
+    public void registerCommand(CommandListener listener)
+    {
+        try
         {
-            try
-            {
-                Files.copy(getResource("config.yml"), filePath);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                return false;
-            }
+            Method commandMap = getServer().getClass().getMethod("getCommandMap", null);
+            Object cmdmap = commandMap.invoke(getServer(), null);
+            Method register = cmdmap.getClass().getMethod("register", String.class, Command.class);
+            register.invoke(cmdmap, listener.getCommand(), new NativeBukkitCommand(listener));
         }
-
-        config = YamlConfiguration.loadConfiguration(filePath.toFile());
-
-        return true;
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

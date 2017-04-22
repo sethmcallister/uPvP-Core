@@ -1,22 +1,17 @@
 package us.upvp.core.data;
 
-import us.upvp.core.framework.ban.UBan;
-import us.upvp.core.framework.mute.UMute;
-import us.upvp.core.framework.server.hcfactions.UFaction;
-import us.upvp.core.framework.user.UUser;
+import us.upvp.core.data.model.BanDao;
+import us.upvp.core.data.model.MuteDao;
+import us.upvp.core.data.model.UserDao;
 
 /**
- * Created by Wout on 14/04/2017.
+ * Created by Wout on 15/04/2017.
  */
-public class DatabaseManager
+public interface DatabaseManager
 {
-    private DataDriver<UUser> userDataDriver;
-    private DataDriver<UBan> banDataDriver;
-    private DataDriver<UMute> muteDataDriver;
-    private DataDriver<UFaction> factionDataDriver;
+    BanDao getBanDao();
 
-    public DatabaseManager()
-    {
+    MuteDao getMuteDao();
 
-    }
+    UserDao getUserDao();
 }

@@ -1,85 +1,48 @@
 package us.upvp.core.natives.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import us.upvp.api.framework.module.command.CommandListener;
+import us.upvp.api.framework.server.NativeFunctionality;
 import us.upvp.api.framework.server.Server;
 import us.upvp.api.framework.server.ServerType;
+import us.upvp.api.framework.user.User;
+import us.upvp.core.framework.config.UConfig;
 import us.upvp.core.framework.server.UServer;
-import us.upvp.core.util.FileUtil;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import us.upvp.core.natives.bungee.command.NativeBungeeCommand;
+import us.upvp.core.natives.bungee.listener.PlayerDisconnectEventListener;
+import us.upvp.core.natives.bungee.listener.PostLoginEventListener;
 
 /**
  * Created by Wout on 14/04/2017.
  */
-public class NativeBungeePlugin extends Plugin
+public class NativeBungeePlugin extends Plugin implements NativeFunctionality
 {
-    private Server server;
-    private Configuration config;
-
-    @Override
-    public void onLoad()
-    {
-        boolean ok = loadConfig();
-
-        if (ok)
-        {
-            server = new UServer(config.getString("server-name"), ServerType.PROXY, getLogger(), this,
-                                 getDataFolder().toPath());
-        }
-        else
-        {
-            getProxy().stop();
-        }
-    }
-
     @Override
     public void onEnable()
     {
+        Server server = new UServer(ServerType.PROXY, new UConfig(getDataFolder().toPath(), "config.yml",
+                                                                  getResourceAsStream("config.yml")), getLogger(),
+                                    getDataFolder().toPath(), this);
 
+        getProxy().getPluginManager().registerListener(this, new PostLoginEventListener());
+        getProxy().getPluginManager().registerListener(this, new PlayerDisconnectEventListener());
     }
 
     @Override
-    public void onDisable()
+    public void sendMessage(User user, String message)
     {
-
+        getProxy().getPlayer(user.getUniqueId()).sendMessage(message);
     }
 
-    private boolean loadConfig()
+    @Override
+    public void runAsync(Runnable r)
     {
-        Path dirPath = getDataFolder().toPath();
+        getProxy().getScheduler().runAsync(this, r);
+    }
 
-        FileUtil.createDirIfNotExists(dirPath);
-
-        Path filePath = Paths.get(dirPath.toAbsolutePath().toString(), "config.yml");
-
-        if (!Files.exists(filePath))
-        {
-            try
-            {
-                Files.copy(getResourceAsStream("config.yml"), filePath);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        try
-        {
-            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(filePath.toFile());
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
+    @Override
+    public void registerCommand(CommandListener listener)
+    {
+        getProxy().getPluginManager().registerCommand(this, new NativeBungeeCommand(listener));
     }
 }

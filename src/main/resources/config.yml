@@ -1,4 +1,5 @@
 server-name: foo-bar
+environment: development
 
 # Current supported types: redis
 database:

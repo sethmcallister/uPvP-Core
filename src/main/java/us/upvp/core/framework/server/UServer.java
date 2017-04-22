@@ -1,8 +1,9 @@
 package us.upvp.core.framework.server;
 
-import us.upvp.api.API;
-import us.upvp.api.framework.core.Core;
+import us.upvp.api.framework.config.Config;
+import us.upvp.api.framework.server.NativeFunctionality;
 import us.upvp.api.framework.server.Server;
+import us.upvp.api.framework.server.ServerEnvironment;
 import us.upvp.api.framework.server.ServerType;
 import us.upvp.core.framework.core.UCore;
 
@@ -17,19 +18,23 @@ public class UServer implements Server
 {
     private final String name;
     private final ServerType type;
+    private final ServerEnvironment environment;
+    private final Config config;
     private final Logger logger;
-    private final Core core;
     private final Path pluginDirPath;
+    private final NativeFunctionality plugin;
 
-    public UServer(String name, ServerType type, Logger logger, Object plugin, Path pluginDirPath)
+    public UServer(ServerType type, Config config, Logger logger, Path pluginDirPath, NativeFunctionality plugin)
     {
-        this.name = name;
+        this.name = config.getString("server-name");
         this.type = type;
+        this.environment = ServerEnvironment.valueOf(config.getString("environment").toUpperCase());
+        this.config = config;
         this.logger = logger;
         this.pluginDirPath = pluginDirPath;
-        this.core = new UCore(this, plugin);
+        this.plugin = plugin;
 
-        API.setCore(core);
+        new UCore(this, plugin);
     }
 
     public ServerType getType()
@@ -45,6 +50,24 @@ public class UServer implements Server
     public Logger getLogger()
     {
         return logger;
+    }
+
+    @Override
+    public ServerEnvironment getEnvironment()
+    {
+        return environment;
+    }
+
+    @Override
+    public Config getConfig()
+    {
+        return config;
+    }
+
+    @Override
+    public NativeFunctionality getPlugin()
+    {
+        return plugin;
     }
 
     public Date getNextScheduledRestart()

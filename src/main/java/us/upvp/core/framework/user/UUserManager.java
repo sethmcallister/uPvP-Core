@@ -1,9 +1,23 @@
 package us.upvp.core.framework.user;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import us.upvp.api.API;
+import us.upvp.api.framework.module.event.events.UserConnectedEvent;
+import us.upvp.api.framework.module.event.events.UserDisconnectedEvent;
+import us.upvp.api.framework.permission.Group;
+import us.upvp.api.framework.user.OfflineUser;
 import us.upvp.api.framework.user.User;
 import us.upvp.api.framework.user.UserManager;
+import us.upvp.core.data.DatabaseManager;
+import us.upvp.core.data.model.UserDao;
+import us.upvp.core.framework.permission.URank;
+import us.upvp.core.framework.user.profile.UHCFProfile;
+import us.upvp.core.framework.user.profile.UPracticeProfile;
+import us.upvp.core.framework.util.UUIDFetcher;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,28 +26,99 @@ import java.util.UUID;
  */
 public class UUserManager implements UserManager
 {
+    private final UserDao dao;
+    private final List<User> users;
+    private final DatabaseManager databaseManager;
+
+    public UUserManager(DatabaseManager manager)
+    {
+        this.dao = manager.getUserDao();
+        this.users = Lists.newArrayList();
+        this.databaseManager = manager;
+    }
+
     public User findByUniqueId(UUID uuid)
     {
-        return null;
+        return users.stream().filter(u -> u.getUniqueId().equals(uuid)).findFirst().orElse(null);
     }
 
     public ImmutableList<User> findAllUsers()
     {
-        return null;
+        return ImmutableList.copyOf(users);
     }
 
-    public User findOfflineByUniqueId(UUID uuid)
+    public OfflineUser findOfflineByUniqueId(UUID uuid)
     {
-        return null;
+        return dao.find(uuid);
     }
 
-    public List<User> findAllUsersAnyway()
+    public List<OfflineUser> findAllUsersAnyway()
     {
-        return null;
+        return new ArrayList<>(dao.findAll());
     }
 
-    public User findOfflineByName(String s)
+    public OfflineUser findOfflineByName(String s)
     {
-        return null;
+        try
+        {
+            return findOfflineByUniqueId(new UUIDFetcher(Collections.singletonList(s)).call().get(s));
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public UserDao getDao()
+    {
+        return dao;
+    }
+
+    public List<User> getUsers()
+    {
+        return users;
+    }
+
+    public void handleJoin(UUID uniqueId, String name)
+    {
+        UOfflineUser user = getDao().find(uniqueId);
+
+        if (user == null)
+        {
+            user = new UUser(uniqueId, name, Lists.newArrayList(new URank(Group.MEMBER, "___GLOBAL___")),
+                             new UPracticeProfile(), new UHCFProfile(),
+                             Lists.newArrayList(), Lists.newArrayList(),
+                             API.getTimeFormatter().getFormatted(System.currentTimeMillis()), "");
+
+            getDao().insert(user);
+        }
+        else
+        {
+            user = convert(user);
+        }
+
+        getUsers().add((User) user);
+
+        API.getModuleManger().triggerEvent(new UserConnectedEvent((User) user));
+    }
+
+    public UUser convert(UOfflineUser user)
+    {
+        return new UUser(user.getUniqueId(), user.getLastName(), user.getRanks(), user.getPractice(), user.getHCFactions(), user.getAllIPs(), user.getIgnoredList(), user.getJoinedDate(), user.getPassword());
+    }
+
+    public void handleQuit(UUID uniqueId)
+    {
+        UUserManager manager = (UUserManager) API.getUserManager();
+        UUser user = (UUser) manager.findByUniqueId(uniqueId);
+
+        manager.getUsers().remove(user);
+
+        API.getModuleManger().triggerEvent(new UserDisconnectedEvent(user));
+    }
+
+    public DatabaseManager getDatabaseManager()
+    {
+        return databaseManager;
     }
 }

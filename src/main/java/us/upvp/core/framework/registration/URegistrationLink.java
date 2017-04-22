@@ -2,7 +2,7 @@ package us.upvp.core.framework.registration;
 
 import us.upvp.api.API;
 import us.upvp.api.framework.registration.RegistrationLink;
-import us.upvp.api.framework.user.User;
+import us.upvp.api.framework.user.OfflineUser;
 
 import java.util.UUID;
 
@@ -34,7 +34,7 @@ public class URegistrationLink implements RegistrationLink
     {
         active = false;
 
-        User user = API.getUserManager().findOfflineByUniqueId(uniqueId);
+        OfflineUser user = API.getUserManager().findOfflineByUniqueId(uniqueId);
 
         user.setPassword(s);
 

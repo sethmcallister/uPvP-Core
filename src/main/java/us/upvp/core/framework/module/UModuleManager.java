@@ -7,19 +7,25 @@ import org.yaml.snakeyaml.Yaml;
 import us.upvp.api.framework.module.ModuleLoadException;
 import us.upvp.api.framework.module.ModuleManager;
 import us.upvp.api.framework.module.PluginModule;
+import us.upvp.api.framework.module.command.CommandCaller;
+import us.upvp.api.framework.module.command.CommandCallerType;
+import us.upvp.api.framework.module.event.Event;
 import us.upvp.api.framework.server.Server;
 import us.upvp.core.framework.server.UServer;
 import us.upvp.core.util.FileUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.jar.JarFile;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
@@ -29,14 +35,15 @@ import java.util.zip.ZipEntry;
 public class UModuleManager implements ModuleManager
 {
     private final List<PluginModule> modules;
+    private final Server server;
     private final Path dirPath;
-    private final Logger logger;
 
+    // TODO logging
     public UModuleManager(Server server)
     {
         this.modules = Lists.newArrayList();
+        this.server = server;
         this.dirPath = ((UServer) server).getPluginDir();
-        this.logger = server.getLogger();
 
         loadModules(dirPath);
     }
@@ -47,23 +54,27 @@ public class UModuleManager implements ModuleManager
 
         FileUtil.createDirIfNotExists(modulesPath);
 
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.jar");
-
         try (Stream<Path> paths = Files.walk(modulesPath))
         {
-            paths.filter(matcher::matches).forEach(p ->
-                                                   {
-                                                       try
-                                                       {
-                                                           loadModule(p);
-                                                       }
-                                                       catch (ModuleLoadException e)
-                                                       {
-                                                           logger.warning(String.format(
-                                                                   "Failed to load module '%s' with message %s!",
-                                                                   p.getFileName(), e.getMessage()));
-                                                       }
-                                                   });
+            paths.filter(p -> p.toString().endsWith(".jar")).forEach(p ->
+                                                                     {
+                                                                         try
+                                                                         {
+                                                                             PluginModule module = loadModule(p);
+
+                                                                             if (module != null)
+                                                                             {
+                                                                                 server.getPlugin()
+                                                                                       .runAsync(() -> enableModule(
+                                                                                               module));
+                                                                             }
+                                                                         }
+                                                                         catch (ModuleLoadException e)
+                                                                         {
+                                                                             System.out.println(
+                                                                                     "Error loading module %s!");
+                                                                         }
+                                                                     });
         }
         catch (IOException e)
         {
@@ -107,7 +118,19 @@ public class UModuleManager implements ModuleManager
             URLClassLoader child = new URLClassLoader(new URL[] { path.toUri().toURL() }, getClass().getClassLoader());
             Class mainClass = Class.forName(main, true, child);
 
-            return (PluginModule) mainClass.newInstance();
+            PluginModule module = (PluginModule) mainClass.newInstance();
+
+            Field nameField = module.getClass().getSuperclass().getDeclaredField("name");
+            nameField.setAccessible(true);
+            nameField.set(module, name);
+            nameField.setAccessible(false);
+
+            Field versionField = module.getClass().getSuperclass().getDeclaredField("version");
+            versionField.setAccessible(true);
+            versionField.set(module, version);
+            versionField.setAccessible(false);
+
+            return module;
         }
         catch (Exception e)
         {
@@ -137,6 +160,11 @@ public class UModuleManager implements ModuleManager
         }
 
         module.onEnable();
+
+        module.getCommandListeners()
+              .forEach(l -> server.getPlugin().registerCommand(l));
+
+        System.out.println(String.format("Loaded module %s!", module.getModuleName()));
 
         modules.add(module);
     }
@@ -174,5 +202,31 @@ public class UModuleManager implements ModuleManager
     public boolean isEnabled(String name)
     {
         return findEnabledModule(name) != null;
+    }
+
+    @Override
+    public void triggerEvent(Event event)
+    {
+        getAllEnabledModules().forEach(m -> m.getEventListeners()
+                                             .stream()
+                                             .filter(e -> e.getEventClass().equals(event.getClass()))
+                                             .forEach(e -> e.handle(event)));
+    }
+
+    @Override
+    public void triggerCommand(CommandCaller caller, CommandCallerType type, String cmd)
+    {
+        String command = cmd.split(" ")[0];
+
+        getAllEnabledModules().stream()
+                              .map(PluginModule::getCommandListeners)
+                              .collect(Collectors.toList())
+                              .stream()
+                              .flatMap(List::stream)
+                              .collect(Collectors.toList())
+                              .stream()
+                              .filter(cl -> cl.getCommand().equalsIgnoreCase(command) ||
+                                            cl.getAliases().stream().anyMatch(a -> a.equalsIgnoreCase(command)))
+                              .forEach(cl -> cl.execute(caller, type, cmd.split(" ")));
     }
 }

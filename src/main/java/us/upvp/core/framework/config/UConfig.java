@@ -1,22 +1,72 @@
-package us.upvp.core.framework.module;
+package us.upvp.core.framework.config;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import org.yaml.snakeyaml.Yaml;
-import us.upvp.api.framework.module.PluginModuleConfig;
+import us.upvp.api.framework.config.Config;
+import us.upvp.core.util.FileUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
  * Created by Wout on 15/04/2017.
  */
-public class UPluginModuleConfig implements PluginModuleConfig
+public class UConfig implements Config
 {
-    private final String yaml;
+    private String yaml;
     private HashMap<String, Object> values;
 
-    public UPluginModuleConfig(String yaml)
+    public UConfig(String yaml)
     {
         this.yaml = yaml;
         this.values = new HashMap<>();
+    }
+
+    public UConfig(Path file)
+    {
+        loadFromFile(file);
+    }
+
+    public UConfig(Path dir, String name, InputStream file)
+    {
+        FileUtil.createDirIfNotExists(dir);
+
+        Path filePath = Paths.get(dir.toAbsolutePath().toString(), name);
+
+        if (!Files.exists(filePath))
+        {
+            try
+            {
+                Files.copy(file, filePath);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        loadFromFile(filePath);
+
+        load();
+    }
+
+    private void loadFromFile(Path file)
+    {
+        try
+        {
+            yaml = CharStreams.toString(new InputStreamReader(
+                    Files.newInputStream(file), Charsets.UTF_8));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

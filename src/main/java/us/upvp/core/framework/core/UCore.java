@@ -1,14 +1,18 @@
 package us.upvp.core.framework.core;
 
+import us.upvp.api.API;
 import us.upvp.api.framework.ban.BanManager;
 import us.upvp.api.framework.core.Core;
 import us.upvp.api.framework.module.ModuleManager;
 import us.upvp.api.framework.mute.MuteManager;
 import us.upvp.api.framework.registration.RegistrationManager;
+import us.upvp.api.framework.server.NativeFunctionality;
 import us.upvp.api.framework.server.Server;
 import us.upvp.api.framework.time.TimeFormatter;
 import us.upvp.api.framework.user.UserManager;
 import us.upvp.api.framework.util.UUIDFetcher;
+import us.upvp.core.data.DatabaseManager;
+import us.upvp.core.data.redis.RedisDatabaseManager;
 import us.upvp.core.framework.ban.UBanManager;
 import us.upvp.core.framework.module.UModuleManager;
 import us.upvp.core.framework.mute.UMuteManager;
@@ -17,7 +21,6 @@ import us.upvp.core.framework.time.UTimeFormatter;
 import us.upvp.core.framework.user.UUserManager;
 import us.upvp.core.framework.util.UUUIDFetcher;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -29,25 +32,29 @@ public class UCore implements Core
     private final BanManager banManager;
     private final RegistrationManager registrationManager;
     private final MuteManager muteManager;
+    private final NativeFunctionality plugin;
     private final ModuleManager moduleManager;
     private final TimeFormatter timeFormatter;
     private final UUIDFetcher uuidFetcher;
     private final Logger logger;
     private final Server server;
-    private final Object plugin;
 
-    public UCore(Server server, Object plugin)
+    public UCore(Server server, NativeFunctionality plugin)
     {
-        this.userManager = new UUserManager();
-        this.banManager = new UBanManager();
+        API.setCore(this);
+
+        DatabaseManager databaseManager = new RedisDatabaseManager(server);
+
+        this.userManager = new UUserManager(databaseManager);
+        this.banManager = new UBanManager(databaseManager);
         this.registrationManager = new URegistrationManager();
-        this.muteManager = new UMuteManager();
-        this.moduleManager = new UModuleManager(server);
-        this.timeFormatter = new UTimeFormatter();
-        this.uuidFetcher = new UUUIDFetcher(new ArrayList<String>());
-        this.logger = getServer().getLogger();
-        this.server = server;
+        this.muteManager = new UMuteManager(databaseManager);
         this.plugin = plugin;
+        this.timeFormatter = new UTimeFormatter();
+        this.uuidFetcher = new UUUIDFetcher();
+        this.server = server;
+        this.logger = getServer().getLogger();
+        this.moduleManager = new UModuleManager(server);
     }
 
     public UserManager getUserManager()
@@ -95,7 +102,7 @@ public class UCore implements Core
         return server;
     }
 
-    public Object getPlugin()
+    public NativeFunctionality getPlugin()
     {
         return plugin;
     }

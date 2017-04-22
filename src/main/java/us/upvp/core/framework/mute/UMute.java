@@ -1,27 +1,31 @@
 package us.upvp.core.framework.mute;
 
+import us.upvp.api.framework.entity.EntityId;
 import us.upvp.api.framework.mute.Mute;
 import us.upvp.api.framework.mute.MuteType;
 import us.upvp.api.framework.mute.SimplifiedMuteType;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Wout on 14/04/2017.
  */
 public class UMute implements Mute
 {
+    private final UUID id;
     private final MuteType type;
     private final SimplifiedMuteType simplifiedMuteType;
     private final String reason;
-    private final String mutedBy;
+    private final EntityId mutedBy;
     private final Date expireDate;
     private final Date muteDate;
-    private final String target;
+    private final EntityId target;
     private final boolean active;
 
-    public UMute(String target, MuteType type, String reason, String mutedBy)
+    public UMute(EntityId target, MuteType type, String reason, EntityId mutedBy)
     {
+        this.id = UUID.randomUUID();
         this.target = target;
         this.simplifiedMuteType = (type == MuteType.IP_PERMANENT || type ==
                                                                     MuteType.NORMAL_PERMANENT ? SimplifiedMuteType.PERMANENT : SimplifiedMuteType.TEMPORARILY);
@@ -33,8 +37,9 @@ public class UMute implements Mute
         this.muteDate = new Date();
     }
 
-    public UMute(String target, MuteType type, String reason, String mutedBy, Date expireDate)
+    public UMute(EntityId target, MuteType type, String reason, EntityId mutedBy, Date expireDate)
     {
+        this.id = UUID.randomUUID();
         this.target = target;
         this.simplifiedMuteType = (type == MuteType.IP_PERMANENT || type ==
                                                                     MuteType.NORMAL_PERMANENT ? SimplifiedMuteType.PERMANENT : SimplifiedMuteType.TEMPORARILY);
@@ -62,7 +67,7 @@ public class UMute implements Mute
         return reason;
     }
 
-    public String getMutedBy()
+    public EntityId getMutedBy()
     {
         return mutedBy;
     }
@@ -77,7 +82,7 @@ public class UMute implements Mute
         return muteDate;
     }
 
-    public String getTarget()
+    public EntityId getTarget()
     {
         return target;
     }
