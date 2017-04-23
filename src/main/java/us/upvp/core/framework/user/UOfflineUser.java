@@ -1,16 +1,12 @@
 package us.upvp.core.framework.user;
 
 import com.google.common.collect.Lists;
-import com.google.gson.GsonBuilder;
 import us.upvp.api.API;
 import us.upvp.api.framework.permission.Group;
 import us.upvp.api.framework.permission.Rank;
 import us.upvp.api.framework.user.OfflineUser;
 import us.upvp.api.framework.user.profile.HCFProfile;
 import us.upvp.api.framework.user.profile.PracticeProfile;
-import us.upvp.core.data.redis.RedisDatabaseManager;
-import us.upvp.core.data.redis.messaging.Message;
-import us.upvp.core.data.redis.messaging.MessageType;
 import us.upvp.core.framework.permission.URank;
 import us.upvp.core.framework.user.profile.UHCFProfile;
 import us.upvp.core.framework.user.profile.UPracticeProfile;
@@ -174,8 +170,7 @@ public class UOfflineUser implements OfflineUser
 
         manager.getDao().update((UUser) this);
 
-        ((RedisDatabaseManager) manager.getDatabaseManager()).getClient().connectPubSub().sync().publish("update", new GsonBuilder().create().toJson(new Message(uniqueId,
-                                                                                                                                                   MessageType.USER)));
+        API.getRedisDataManager().sendUpdate("user", getUniqueId());
     }
 
     public void setPracticeProfile(PracticeProfile practiceProfile)

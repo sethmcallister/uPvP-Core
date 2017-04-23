@@ -9,8 +9,8 @@ import us.upvp.api.framework.permission.Group;
 import us.upvp.api.framework.user.OfflineUser;
 import us.upvp.api.framework.user.User;
 import us.upvp.api.framework.user.UserManager;
-import us.upvp.core.data.DatabaseManager;
-import us.upvp.core.data.model.UserDao;
+import us.upvp.core.framework.data.RedisDatabaseManager;
+import us.upvp.core.framework.data.model.RedisUserDao;
 import us.upvp.core.framework.permission.URank;
 import us.upvp.core.framework.user.profile.UHCFProfile;
 import us.upvp.core.framework.user.profile.UPracticeProfile;
@@ -26,11 +26,11 @@ import java.util.UUID;
  */
 public class UUserManager implements UserManager
 {
-    private final UserDao dao;
+    private final RedisUserDao dao;
     private final List<User> users;
-    private final DatabaseManager databaseManager;
+    private final RedisDatabaseManager databaseManager;
 
-    public UUserManager(DatabaseManager manager)
+    public UUserManager(RedisDatabaseManager manager)
     {
         this.dao = manager.getUserDao();
         this.users = Lists.newArrayList();
@@ -69,7 +69,7 @@ public class UUserManager implements UserManager
         }
     }
 
-    public UserDao getDao()
+    public RedisUserDao getDao()
     {
         return dao;
     }
@@ -104,7 +104,9 @@ public class UUserManager implements UserManager
 
     public UUser convert(UOfflineUser user)
     {
-        return new UUser(user.getUniqueId(), user.getLastName(), user.getRanks(), user.getPractice(), user.getHCFactions(), user.getAllIPs(), user.getIgnoredList(), user.getJoinedDate(), user.getPassword());
+        return new UUser(user.getUniqueId(), user.getLastName(), user.getRanks(), user.getPractice(),
+                         user.getHCFactions(), user.getAllIPs(), user.getIgnoredList(), user.getJoinedDate(),
+                         user.getPassword());
     }
 
     public void handleQuit(UUID uniqueId)
@@ -117,7 +119,7 @@ public class UUserManager implements UserManager
         API.getModuleManger().triggerEvent(new UserDisconnectedEvent(user));
     }
 
-    public DatabaseManager getDatabaseManager()
+    public RedisDatabaseManager getDatabaseManager()
     {
         return databaseManager;
     }

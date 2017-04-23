@@ -1,27 +1,23 @@
-package us.upvp.core.data.redis.model;
+package us.upvp.core.framework.data.model;
 
 import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 import us.upvp.api.API;
+import us.upvp.api.framework.data.messaging.MessageListener;
 import us.upvp.api.framework.user.User;
-import us.upvp.core.data.model.UserDao;
-import us.upvp.core.data.redis.RedisDatabaseManager;
-import us.upvp.core.data.redis.messaging.MessageListener;
-import us.upvp.core.data.redis.messaging.MessageType;
+import us.upvp.core.framework.data.RedisDatabaseManager;
 import us.upvp.core.framework.user.UOfflineUser;
 import us.upvp.core.framework.user.UUserManager;
 
 /**
  * Created by Wout on 15/04/2017.
  */
-public class RedisUserDao extends RedisGenericDao<UOfflineUser> implements UserDao
+public class RedisUserDao extends RedisGenericDao<UOfflineUser>
 {
-    public RedisUserDao(RedisDatabaseManager manager)
+    public RedisUserDao(RedisDatabaseManager manager, StatefulRedisPubSubConnection<String, String> conn)
     {
         super(UOfflineUser.class, manager, "uniqueId");
 
-        StatefulRedisPubSubConnection<String, String> connection = manager.getClient().connectPubSub();
-
-        connection.addListener(new MessageListener(MessageType.USER, (msg) ->
+        conn.addListener(new MessageListener("user", (msg) ->
         {
             UUserManager mng = (UUserManager) API.getUserManager();
 
@@ -35,7 +31,5 @@ public class RedisUserDao extends RedisGenericDao<UOfflineUser> implements UserD
                 }
             }
         }));
-
-        connection.sync().subscribe("update");
     }
 }

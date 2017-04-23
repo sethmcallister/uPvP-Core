@@ -1,11 +1,10 @@
-package us.upvp.core.data.redis.model;
+package us.upvp.core.framework.data.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
-import us.upvp.core.data.model.GenericDao;
-import us.upvp.core.data.redis.RedisDatabaseManager;
-import us.upvp.core.data.redis.messaging.MessageListener;
+import us.upvp.api.framework.data.model.GenericDao;
+import us.upvp.core.framework.data.RedisDatabaseManager;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -80,7 +79,7 @@ public abstract class RedisGenericDao<T> implements GenericDao<T>
         return manager.getClient().connect();
     }
 
-    public final String getKey(T object)
+    private final String getKey(T object)
     {
         Object id = "";
         try
@@ -113,19 +112,9 @@ public abstract class RedisGenericDao<T> implements GenericDao<T>
         return getKeyWithoutIdentifier() + ":" + id.toString();
     }
 
-    public final String getKeyWithoutIdentifier()
+    private String getKeyWithoutIdentifier()
     {
         return manager.getServer().getEnvironment().name().toLowerCase() + ":" +
                clazz.getSimpleName().toLowerCase().substring(1, clazz.getSimpleName().length());
-    }
-
-    public Gson getGson()
-    {
-        return gson;
-    }
-
-    public void setGson(Gson gson)
-    {
-        this.gson = gson;
     }
 }

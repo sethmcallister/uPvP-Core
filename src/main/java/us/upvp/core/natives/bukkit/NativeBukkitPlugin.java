@@ -3,6 +3,7 @@ package us.upvp.core.natives.bukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
+import us.upvp.api.API;
 import us.upvp.api.framework.module.command.CommandListener;
 import us.upvp.api.framework.server.NativeFunctionality;
 import us.upvp.api.framework.server.Server;
@@ -21,6 +22,12 @@ import java.lang.reflect.Method;
  */
 public class NativeBukkitPlugin extends JavaPlugin implements NativeFunctionality
 {
+    @Override
+    public void onDisable()
+    {
+        API.getRedisDataManager().getClient().shutdown();
+    }
+
     @Override
     public void onEnable()
     {

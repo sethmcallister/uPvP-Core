@@ -3,6 +3,7 @@ package us.upvp.core.framework.core;
 import us.upvp.api.API;
 import us.upvp.api.framework.ban.BanManager;
 import us.upvp.api.framework.core.Core;
+import us.upvp.api.framework.data.RedisDataManager;
 import us.upvp.api.framework.module.ModuleManager;
 import us.upvp.api.framework.mute.MuteManager;
 import us.upvp.api.framework.registration.RegistrationManager;
@@ -11,9 +12,8 @@ import us.upvp.api.framework.server.Server;
 import us.upvp.api.framework.time.TimeFormatter;
 import us.upvp.api.framework.user.UserManager;
 import us.upvp.api.framework.util.UUIDFetcher;
-import us.upvp.core.data.DatabaseManager;
-import us.upvp.core.data.redis.RedisDatabaseManager;
 import us.upvp.core.framework.ban.UBanManager;
+import us.upvp.core.framework.data.RedisDatabaseManager;
 import us.upvp.core.framework.module.UModuleManager;
 import us.upvp.core.framework.mute.UMuteManager;
 import us.upvp.core.framework.registration.URegistrationManager;
@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  */
 public class UCore implements Core
 {
+    private final RedisDatabaseManager databaseManager;
     private final UserManager userManager;
     private final BanManager banManager;
     private final RegistrationManager registrationManager;
@@ -43,7 +44,7 @@ public class UCore implements Core
     {
         API.setCore(this);
 
-        DatabaseManager databaseManager = new RedisDatabaseManager(server);
+        this.databaseManager = new RedisDatabaseManager(server);
 
         this.userManager = new UUserManager(databaseManager);
         this.banManager = new UBanManager(databaseManager);
@@ -80,6 +81,12 @@ public class UCore implements Core
     public ModuleManager getModuleManager()
     {
         return moduleManager;
+    }
+
+    @Override
+    public RedisDataManager getDataManager()
+    {
+        return databaseManager;
     }
 
     public TimeFormatter getTimeFormatter()

@@ -5,8 +5,8 @@ import us.upvp.api.framework.mute.Mute;
 import us.upvp.api.framework.mute.MuteManager;
 import us.upvp.api.framework.mute.MuteType;
 import us.upvp.api.framework.user.OfflineUser;
-import us.upvp.core.data.DatabaseManager;
-import us.upvp.core.data.model.MuteDao;
+import us.upvp.core.framework.data.RedisDatabaseManager;
+import us.upvp.core.framework.data.model.RedisMuteDao;
 import us.upvp.core.framework.entity.UIPEntity;
 
 import java.util.Date;
@@ -16,9 +16,9 @@ import java.util.Date;
  */
 public class UMuteManager implements MuteManager
 {
-    private final MuteDao dao;
+    private final RedisMuteDao dao;
 
-    public UMuteManager(DatabaseManager manager)
+    public UMuteManager(RedisDatabaseManager manager)
     {
         this.dao = manager.getMuteDao();
     }

@@ -21,7 +21,7 @@ public class UMute implements Mute
     private final Date expireDate;
     private final Date muteDate;
     private final EntityId target;
-    private final boolean active;
+    private boolean active;
 
     public UMute(EntityId target, MuteType type, String reason, EntityId mutedBy)
     {

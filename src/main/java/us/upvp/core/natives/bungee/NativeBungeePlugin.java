@@ -1,6 +1,7 @@
 package us.upvp.core.natives.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
+import us.upvp.api.API;
 import us.upvp.api.framework.module.command.CommandListener;
 import us.upvp.api.framework.server.NativeFunctionality;
 import us.upvp.api.framework.server.Server;
@@ -26,6 +27,12 @@ public class NativeBungeePlugin extends Plugin implements NativeFunctionality
 
         getProxy().getPluginManager().registerListener(this, new PostLoginEventListener());
         getProxy().getPluginManager().registerListener(this, new PlayerDisconnectEventListener());
+    }
+
+    @Override
+    public void onDisable()
+    {
+        API.getRedisDataManager().getClient().shutdown();
     }
 
     @Override

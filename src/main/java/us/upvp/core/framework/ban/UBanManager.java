@@ -5,8 +5,8 @@ import us.upvp.api.framework.ban.BanManager;
 import us.upvp.api.framework.ban.BanType;
 import us.upvp.api.framework.entity.EntityId;
 import us.upvp.api.framework.user.OfflineUser;
-import us.upvp.core.data.DatabaseManager;
-import us.upvp.core.data.model.BanDao;
+import us.upvp.core.framework.data.RedisDatabaseManager;
+import us.upvp.core.framework.data.model.RedisBanDao;
 import us.upvp.core.framework.entity.UIPEntity;
 
 import java.util.Date;
@@ -16,9 +16,9 @@ import java.util.Date;
  */
 public class UBanManager implements BanManager
 {
-    private final BanDao dao;
+    private final RedisBanDao dao;
 
-    public UBanManager(DatabaseManager manager)
+    public UBanManager(RedisDatabaseManager manager)
     {
         this.dao = manager.getBanDao();
     }
