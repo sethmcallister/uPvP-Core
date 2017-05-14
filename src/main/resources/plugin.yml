@@ -1,5 +1,5 @@
-name: uPvP-Core
+name: HCF-Core
 version: 1.0.0-SNAPSHOT
-main: us.upvp.core.natives.bukkit.NativeBukkitPlugin
+main: net.hcfpvp.core.natives.bukkit.NativeBukkitPlugin
 author: Wout Ceulemans
 website: www.woutdev.be

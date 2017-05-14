@@ -1,18 +1,20 @@
 package us.upvp.core.framework.module;
 
+import net.hcfpvp.core.framework.module.UModuleManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import us.upvp.api.framework.module.ModuleLoadException;
-import us.upvp.api.framework.module.ModuleManager;
-import us.upvp.api.framework.module.PluginModule;
-import us.upvp.api.framework.server.NativeFunctionality;
-import us.upvp.api.framework.server.ServerType;
-import us.upvp.core.framework.server.UServer;
-import us.upvp.core.util.FileUtil;
+import net.hcfpvp.api.framework.module.ModuleLoadException;
+import net.hcfpvp.api.framework.module.ModuleManager;
+import net.hcfpvp.api.framework.module.PluginModule;
+import net.hcfpvp.api.framework.server.NativeFunctionality;
+import net.hcfpvp.api.framework.server.ServerType;
+import net.hcfpvp.core.framework.profile.ProfileHandler;
+import net.hcfpvp.core.framework.server.UServer;
+import net.hcfpvp.core.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,11 +36,14 @@ public class UModuleManagerTest
     public ExpectedException thrown = ExpectedException.none();
     private ModuleManager manager;
     private UServer mockServer;
+    private ProfileHandler mockProfileHandler;
 
     @Before
     public void setUp() throws Exception
     {
         mockServer = mock(UServer.class);
+
+        mockProfileHandler = new ProfileHandler();
 
         NativeFunctionality nativeFunctionality = mock(NativeFunctionality.class);
 
@@ -49,7 +54,7 @@ public class UModuleManagerTest
 
         FileUtil.createDirIfNotExists(Paths.get(tmpFolder.getRoot().getAbsolutePath(), "modules"));
 
-        manager = new UModuleManager(mockServer);
+        manager = new UModuleManager(mockServer, mockProfileHandler);
 
         Files.copy(getClass().getResourceAsStream("/uPvP-Core-Test-Module-1.0-SNAPSHOT.jar"),
                    new File(tmpFolder.getRoot(), "modules/valid-test-file.jar").toPath());
@@ -61,7 +66,7 @@ public class UModuleManagerTest
         Files.copy(getClass().getResourceAsStream("/uPvP-Core-Test-Ignore-Module-1.0-SNAPSHOT.jar"),
                    new File(tmpFolder.getRoot(), "modules/test-file.jar").toPath());
 
-        new UModuleManager(mockServer);
+        new UModuleManager(mockServer, mockProfileHandler);
     }
 
     @Test

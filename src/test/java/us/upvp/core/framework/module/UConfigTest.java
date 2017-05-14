@@ -3,8 +3,8 @@ package us.upvp.core.framework.module;
 import com.google.common.io.Resources;
 import org.junit.Before;
 import org.junit.Test;
-import us.upvp.api.framework.config.Config;
-import us.upvp.core.framework.config.UConfig;
+import net.hcfpvp.api.framework.config.Config;
+import net.hcfpvp.core.framework.config.UConfig;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
