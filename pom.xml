@@ -11,7 +11,7 @@
     <repositories>
         <repository>
             <id>hcfpvp-api</id>
-            <url>http://oss.sethy.xyz/repository/HCF-API/</url>
+            <url>http://oss.sethy.xyz/repository/API/</url>
         </repository>
         <repository>
             <id>hcfpvp-spigot-api</id>
@@ -143,7 +143,7 @@
     <dependencies>
         <dependency>
             <groupId>net.hcfpvp</groupId>
-            <artifactId>HCF-API</artifactId>
+            <artifactId>API</artifactId>
             <version>1.5.0-SNAPSHOT</version>
         </dependency>
         <dependency>
