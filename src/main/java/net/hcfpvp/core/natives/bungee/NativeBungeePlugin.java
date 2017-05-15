@@ -1,9 +1,5 @@
 package net.hcfpvp.core.natives.bungee;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.plugin.Plugin;
-import net.hcfpvp.core.framework.server.UServer;
-import net.hcfpvp.core.natives.bungee.command.NativeBungeeCommand;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.module.command.CommandListener;
 import net.hcfpvp.api.framework.server.NativeFunctionality;
@@ -11,8 +7,12 @@ import net.hcfpvp.api.framework.server.Server;
 import net.hcfpvp.api.framework.server.ServerType;
 import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.core.framework.config.UConfig;
+import net.hcfpvp.core.framework.server.UServer;
+import net.hcfpvp.core.natives.bungee.command.NativeBungeeCommand;
 import net.hcfpvp.core.natives.bungee.listener.PlayerDisconnectEventListener;
 import net.hcfpvp.core.natives.bungee.listener.ServerConnectEventListener;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.plugin.Plugin;
 
 /**
  * Created by Wout on 14/04/2017.

@@ -1,20 +1,20 @@
 package us.upvp.core.framework.module;
 
+import net.hcfpvp.api.framework.module.ModuleLoadException;
+import net.hcfpvp.api.framework.module.ModuleManager;
+import net.hcfpvp.api.framework.module.PluginModule;
+import net.hcfpvp.api.framework.server.NativeFunctionality;
+import net.hcfpvp.api.framework.server.ServerType;
+import net.hcfpvp.api.profiles.ProfileHandler;
 import net.hcfpvp.core.framework.module.UModuleManager;
+import net.hcfpvp.core.framework.server.UServer;
+import net.hcfpvp.core.util.FileUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import net.hcfpvp.api.framework.module.ModuleLoadException;
-import net.hcfpvp.api.framework.module.ModuleManager;
-import net.hcfpvp.api.framework.module.PluginModule;
-import net.hcfpvp.api.framework.server.NativeFunctionality;
-import net.hcfpvp.api.framework.server.ServerType;
-import net.hcfpvp.core.framework.profile.ProfileHandler;
-import net.hcfpvp.core.framework.server.UServer;
-import net.hcfpvp.core.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

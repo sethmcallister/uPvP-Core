@@ -3,14 +3,14 @@ package net.hcfpvp.core.framework.data.model;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.hcfpvp.core.framework.data.adapter.RankAdapter;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.data.model.GenericDao;
 import net.hcfpvp.api.framework.entity.EntityId;
 import net.hcfpvp.api.framework.permission.Rank;
 import net.hcfpvp.core.framework.data.adapter.EntityIdAdapter;
+import net.hcfpvp.core.framework.data.adapter.RankAdapter;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

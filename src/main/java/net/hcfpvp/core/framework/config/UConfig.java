@@ -2,9 +2,9 @@ package net.hcfpvp.core.framework.config;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
+import net.hcfpvp.api.framework.config.Config;
 import net.hcfpvp.core.util.FileUtil;
 import org.yaml.snakeyaml.Yaml;
-import net.hcfpvp.api.framework.config.Config;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,10 +1,10 @@
 package net.hcfpvp.core.natives.bukkit.listener;
 
+import net.hcfpvp.api.API;
+import net.hcfpvp.core.framework.user.UUserManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import net.hcfpvp.api.API;
-import net.hcfpvp.core.framework.user.UUserManager;
 
 /**
  * Created by Wout on 16/04/2017.

@@ -1,16 +1,16 @@
 package net.hcfpvp.core.framework.data.model;
 
-import net.hcfpvp.api.profiles.Profile;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.data.messaging.MessageListener;
 import net.hcfpvp.api.framework.user.OfflineUser;
 import net.hcfpvp.api.framework.user.User;
-import net.hcfpvp.core.framework.profile.ProfileHandler;
+import net.hcfpvp.api.profiles.Profile;
+import net.hcfpvp.api.profiles.ProfileHandler;
 import net.hcfpvp.core.framework.user.UOfflineUser;
 import net.hcfpvp.core.framework.user.UUser;
 import net.hcfpvp.core.framework.user.UUserManager;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

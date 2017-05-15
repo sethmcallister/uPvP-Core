@@ -2,8 +2,6 @@ package net.hcfpvp.core.framework.user;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import net.hcfpvp.core.framework.data.model.RedisUserDao;
-import net.hcfpvp.core.framework.util.UUIDFetcher;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.ban.Ban;
 import net.hcfpvp.api.framework.module.event.events.UserConnectedEvent;
@@ -13,6 +11,8 @@ import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.api.framework.user.UserManager;
 import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
 import net.hcfpvp.core.framework.data.RedisDatabaseManager;
+import net.hcfpvp.core.framework.data.model.RedisUserDao;
+import net.hcfpvp.core.framework.util.UUIDFetcher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,6 +98,7 @@ public class UUserManager implements UserManager
                         StandardProfileKey.MOST_RECENT_IP.getKey()));
             }
         }
+
 
         getUsers().add((User) user);
 

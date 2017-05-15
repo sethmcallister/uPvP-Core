@@ -1,14 +1,14 @@
 package net.hcfpvp.core.natives.bungee.listener;
 
+import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.entity.EntityId;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
 import net.hcfpvp.core.framework.entity.UIPEntity;
 import net.hcfpvp.core.framework.user.UUser;
 import net.hcfpvp.core.framework.user.UUserManager;
-import net.hcfpvp.api.API;
-import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
+import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
 import java.util.Set;
 
@@ -41,7 +41,7 @@ public class ServerConnectEventListener implements Listener
         ((Set<EntityId>) u.getStandardProfile()
                           .getValues()
                           .get(StandardProfileKey.IPS.getKey()))
-                       .add(new UIPEntity(e.getPlayer().getAddress().getAddress().getHostAddress()));
+                .add(new UIPEntity(e.getPlayer().getAddress().getAddress().getHostAddress()));
         u.getStandardProfile()
          .getValues()
          .put(StandardProfileKey.LAST_SEEN.getKey(),

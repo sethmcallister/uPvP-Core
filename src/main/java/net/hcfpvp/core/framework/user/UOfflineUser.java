@@ -8,13 +8,11 @@ import net.hcfpvp.api.framework.permission.Rank;
 import net.hcfpvp.api.framework.user.OfflineUser;
 import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
 import net.hcfpvp.api.profiles.Profile;
-import net.hcfpvp.api.profiles.core.StandardProfile;
+import net.hcfpvp.core.framework.core.UCore;
 import net.hcfpvp.core.framework.permission.URank;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Created by Wout on 14/04/2017.
@@ -29,7 +27,7 @@ public class UOfflineUser implements OfflineUser, Cloneable
         this.uniqueId = uniqueId;
         this.profiles = Maps.newHashMap();
 
-        profiles.put("standard", new StandardProfile(this));
+        initializeProfiles();
     }
 
     public UOfflineUser(UUID uniqueId, Collection<Profile> profiles)
@@ -38,6 +36,34 @@ public class UOfflineUser implements OfflineUser, Cloneable
         this.profiles = Maps.newHashMap();
 
         profiles.forEach(p -> this.profiles.put(p.getProfileName(), p));
+
+        initializeProfiles();
+    }
+
+    private void initializeProfiles()
+    {
+        for (Map.Entry<String, Class<? extends Profile>> profileEntry : ((UCore) API.getCore()).getProfileHandler()
+                                                                                               .getProfiles()
+                                                                                               .entrySet())
+        {
+            if (profiles.containsKey(profileEntry.getKey()))
+            {
+                continue;
+            }
+
+            try
+            {
+                profiles.put(profileEntry.getKey(),
+                             profileEntry.getValue().getConstructor(OfflineUser.class).newInstance(this));
+            }
+            catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e)
+            {
+                API.getLogger()
+                   .severe("Failed to initialize profile " + profileEntry.getKey() + " for user with unique id " +
+                           uniqueId.toString() + "!");
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

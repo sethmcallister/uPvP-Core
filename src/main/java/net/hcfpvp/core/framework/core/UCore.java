@@ -1,12 +1,5 @@
 package net.hcfpvp.core.framework.core;
 
-import net.hcfpvp.core.framework.ban.UBanManager;
-import net.hcfpvp.core.framework.module.UModuleManager;
-import net.hcfpvp.core.framework.mute.UMuteManager;
-import net.hcfpvp.core.framework.profile.ProfileHandler;
-import net.hcfpvp.core.framework.time.UTimeFormatter;
-import net.hcfpvp.core.framework.user.UUserManager;
-import net.hcfpvp.core.framework.util.UUUIDFetcher;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.ban.BanManager;
 import net.hcfpvp.api.framework.core.Core;
@@ -18,7 +11,14 @@ import net.hcfpvp.api.framework.server.Server;
 import net.hcfpvp.api.framework.time.TimeFormatter;
 import net.hcfpvp.api.framework.user.UserManager;
 import net.hcfpvp.api.framework.util.UUIDFetcher;
+import net.hcfpvp.api.profiles.ProfileHandler;
+import net.hcfpvp.core.framework.ban.UBanManager;
 import net.hcfpvp.core.framework.data.RedisDatabaseManager;
+import net.hcfpvp.core.framework.module.UModuleManager;
+import net.hcfpvp.core.framework.mute.UMuteManager;
+import net.hcfpvp.core.framework.time.UTimeFormatter;
+import net.hcfpvp.core.framework.user.UUserManager;
+import net.hcfpvp.core.framework.util.UUUIDFetcher;
 
 import java.util.logging.Logger;
 

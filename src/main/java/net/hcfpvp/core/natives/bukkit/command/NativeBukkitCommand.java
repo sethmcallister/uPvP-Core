@@ -1,15 +1,15 @@
 package net.hcfpvp.core.natives.bukkit.command;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
-import org.bukkit.entity.Player;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.module.command.CommandCallerType;
 import net.hcfpvp.api.framework.module.command.CommandListener;
 import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.core.framework.console.UConsoleUser;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.entity.Player;
 
 /**
  * Created by Wout on 17/04/2017.

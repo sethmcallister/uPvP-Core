@@ -22,7 +22,9 @@ public class UUser extends UOfflineUser implements User, OfflineUser, CommandCal
     {
         super(uniqueId);
 
-        getStandardProfile().getValues().put(StandardProfileKey.RANKS.getKey(), Sets.newHashSet(new URank(Group.MEMBER, "___GLOBAL___")));
+        getStandardProfile().getValues()
+                            .put(StandardProfileKey.RANKS.getKey(),
+                                 Sets.newHashSet(new URank(Group.MEMBER, "___GLOBAL___")));
     }
 
     public UUser(UUID uniqueId, Collection<Profile> profiles)

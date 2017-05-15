@@ -2,17 +2,17 @@ package net.hcfpvp.core.framework.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.hcfpvp.core.framework.data.model.RedisBanDao;
-import net.hcfpvp.core.framework.data.model.RedisMuteDao;
-import net.hcfpvp.core.framework.data.model.RedisUserDao;
-import net.hcfpvp.core.framework.profile.ProfileHandler;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import net.hcfpvp.api.framework.data.RedisDataManager;
 import net.hcfpvp.api.framework.data.messaging.Message;
 import net.hcfpvp.api.framework.data.messaging.MessageListener;
 import net.hcfpvp.api.framework.server.Server;
+import net.hcfpvp.api.profiles.ProfileHandler;
+import net.hcfpvp.core.framework.data.model.RedisBanDao;
+import net.hcfpvp.core.framework.data.model.RedisMuteDao;
+import net.hcfpvp.core.framework.data.model.RedisUserDao;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.HashMap;
 import java.util.UUID;

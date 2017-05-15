@@ -1,11 +1,5 @@
 package net.hcfpvp.core.natives.bukkit;
 
-import net.hcfpvp.core.natives.bukkit.command.NativeBukkitCommand;
-import net.hcfpvp.core.natives.bukkit.listener.AsyncPlayerPreLoginListener;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.plugin.java.JavaPlugin;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.module.command.CommandListener;
 import net.hcfpvp.api.framework.server.NativeFunctionality;
@@ -14,7 +8,13 @@ import net.hcfpvp.api.framework.server.ServerType;
 import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.core.framework.config.UConfig;
 import net.hcfpvp.core.framework.server.UServer;
+import net.hcfpvp.core.natives.bukkit.command.NativeBukkitCommand;
+import net.hcfpvp.core.natives.bukkit.listener.AsyncPlayerPreLoginListener;
 import net.hcfpvp.core.natives.bukkit.listener.PlayerQuitListener;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
 

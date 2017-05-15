@@ -1,7 +1,7 @@
 package net.hcfpvp.core.framework.data.model;
 
-import redis.clients.jedis.JedisPool;
 import net.hcfpvp.core.framework.ban.UBan;
+import redis.clients.jedis.JedisPool;
 
 /**
  * Created by Wout on 15/04/2017.
