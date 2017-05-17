@@ -3,6 +3,7 @@ package net.hcfpvp.core.natives.bungee.listener;
 import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.entity.EntityId;
 import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
+import net.hcfpvp.api.profiles.core.StandardProfile;
 import net.hcfpvp.core.framework.entity.UIPEntity;
 import net.hcfpvp.core.framework.user.UUser;
 import net.hcfpvp.core.framework.user.UUserManager;
@@ -30,22 +31,12 @@ public class ServerConnectEventListener implements Listener
         }
 
         UUser u = (UUser) API.getUserManager().findByUniqueId(e.getPlayer().getUniqueId());
+        StandardProfile profile = (StandardProfile) u.getStandardProfile();
 
-        u.getStandardProfile()
-         .getValues()
-         .put(StandardProfileKey.LAST_KNOWN_USERNAME.getKey(), e.getPlayer().getName());
-        u.getStandardProfile()
-         .getValues()
-         .put(StandardProfileKey.MOST_RECENT_IP.getKey(),
-              new UIPEntity(e.getPlayer().getAddress().getAddress().getHostAddress()));
-        ((Set<EntityId>) u.getStandardProfile()
-                          .getValues()
-                          .get(StandardProfileKey.IPS.getKey()))
-                .add(new UIPEntity(e.getPlayer().getAddress().getAddress().getHostAddress()));
-        u.getStandardProfile()
-         .getValues()
-         .put(StandardProfileKey.LAST_SEEN.getKey(),
-              System.currentTimeMillis());
+        profile.setLastKnownUsername(e.getPlayer().getName());
+        profile.setMostRecentIP(new UIPEntity(e.getPlayer().getAddress().getAddress().getHostAddress()));
+        profile.getIPs().add(new UIPEntity(e.getPlayer().getAddress().getAddress().getHostAddress()));
+        profile.setLastSeenDate(System.currentTimeMillis());
 
         u.update();
     }

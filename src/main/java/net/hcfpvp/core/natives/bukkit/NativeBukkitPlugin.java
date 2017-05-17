@@ -9,7 +9,7 @@ import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.core.framework.config.UConfig;
 import net.hcfpvp.core.framework.server.UServer;
 import net.hcfpvp.core.natives.bukkit.command.NativeBukkitCommand;
-import net.hcfpvp.core.natives.bukkit.listener.AsyncPlayerPreLoginListener;
+import net.hcfpvp.core.natives.bukkit.listener.PlayerJoinListener;
 import net.hcfpvp.core.natives.bukkit.listener.PlayerQuitListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,7 +36,7 @@ public class NativeBukkitPlugin extends JavaPlugin implements NativeFunctionalit
                                     new UConfig(getDataFolder().toPath(), "config.yml", getResource("config.yml")),
                                     getLogger(), getDataFolder().toPath(), this);
 
-        getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
     }
 

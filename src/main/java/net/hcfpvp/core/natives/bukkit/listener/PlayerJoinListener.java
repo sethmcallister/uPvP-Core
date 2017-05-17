@@ -4,16 +4,16 @@ import net.hcfpvp.api.API;
 import net.hcfpvp.core.framework.user.UUserManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * Created by Wout on 16/04/2017.
  */
-public class AsyncPlayerPreLoginListener implements Listener
+public class PlayerJoinListener implements Listener
 {
     @EventHandler
-    public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent e)
+    public void onPlayerJoin(PlayerJoinEvent e)
     {
-        ((UUserManager) API.getUserManager()).handleJoin(e.getUniqueId(), e.getName());
+        ((UUserManager) API.getUserManager()).handleJoin(e.getPlayer().getUniqueId(), e.getPlayer().getName());
     }
 }

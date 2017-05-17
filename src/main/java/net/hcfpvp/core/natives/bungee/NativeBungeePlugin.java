@@ -10,6 +10,7 @@ import net.hcfpvp.core.framework.config.UConfig;
 import net.hcfpvp.core.framework.server.UServer;
 import net.hcfpvp.core.natives.bungee.command.NativeBungeeCommand;
 import net.hcfpvp.core.natives.bungee.listener.PlayerDisconnectEventListener;
+import net.hcfpvp.core.natives.bungee.listener.PlayerSwitchServerEventListener;
 import net.hcfpvp.core.natives.bungee.listener.ServerConnectEventListener;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -28,6 +29,7 @@ public class NativeBungeePlugin extends Plugin implements NativeFunctionality
 
         getProxy().getPluginManager().registerListener(this, new ServerConnectEventListener());
         getProxy().getPluginManager().registerListener(this, new PlayerDisconnectEventListener());
+        getProxy().getPluginManager().registerListener(this, new PlayerSwitchServerEventListener());
     }
 
     @Override

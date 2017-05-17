@@ -138,7 +138,7 @@ public class UModuleManager implements ModuleManager
 
             if (configYaml != null)
             {
-                Path configDirPath = Paths.get(path.toAbsolutePath().toString(), name);
+                Path configDirPath = Paths.get(path.getParent().toAbsolutePath().toString(), name);
 
                 Config config = new UConfig(configDirPath, "config.yml", file.getInputStream(configYaml));
 

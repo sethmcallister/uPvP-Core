@@ -2,7 +2,9 @@ package net.hcfpvp.core.framework.config;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
+import net.hcfpvp.api.API;
 import net.hcfpvp.api.framework.config.Config;
+import net.hcfpvp.api.framework.data.messaging.Message;
 import net.hcfpvp.core.util.FileUtil;
 import org.yaml.snakeyaml.Yaml;
 
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Wout on 15/04/2017.
@@ -21,6 +24,7 @@ public class UConfig implements Config
 {
     private String yaml;
     private HashMap<String, Object> values;
+    private Path file;
 
     public UConfig(String yaml)
     {
@@ -53,7 +57,9 @@ public class UConfig implements Config
 
         loadFromFile(filePath);
 
-        load();
+        this.file = filePath;
+
+        values = (HashMap<String, Object>) new Yaml().load(yaml);
     }
 
     private void loadFromFile(Path file)
@@ -72,6 +78,11 @@ public class UConfig implements Config
     @Override
     public void load()
     {
+        if (file != null)
+        {
+            loadFromFile(file);
+        }
+
         values = (HashMap<String, Object>) new Yaml().load(yaml);
     }
 
@@ -121,6 +132,12 @@ public class UConfig implements Config
     public Boolean getBoolean(String s)
     {
         return (Boolean) values.getOrDefault(s, null);
+    }
+
+    @Override
+    public List<String> getStringList(String s)
+    {
+        return (List<String>) values.getOrDefault(s, null);
     }
 
     @Override

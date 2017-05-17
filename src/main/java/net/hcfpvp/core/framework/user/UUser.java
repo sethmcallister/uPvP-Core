@@ -8,9 +8,11 @@ import net.hcfpvp.api.framework.user.OfflineUser;
 import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
 import net.hcfpvp.api.profiles.Profile;
+import net.hcfpvp.api.profiles.core.StandardProfile;
 import net.hcfpvp.core.framework.permission.URank;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -21,6 +23,8 @@ public class UUser extends UOfflineUser implements User, OfflineUser, CommandCal
     public UUser(UUID uniqueId)
     {
         super(uniqueId);
+
+        getProfiles().put("standard", new StandardProfile(this));
 
         getStandardProfile().getValues()
                             .put(StandardProfileKey.RANKS.getKey(),

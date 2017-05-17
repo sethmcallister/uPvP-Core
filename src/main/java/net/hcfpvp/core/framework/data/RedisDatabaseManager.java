@@ -65,7 +65,16 @@ public class RedisDatabaseManager implements RedisDataManager
     {
         try (Jedis jedis = getJedisPool().getResource())
         {
-            jedis.publish("update", gson.toJson(new Message(uuid, s)));
+            jedis.publish("update", gson.toJson(new Message(uuid, new String[] {}, s)));
+        }
+    }
+
+    @Override
+    public void sendUpdate(Message message)
+    {
+        try (Jedis jedis = getJedisPool().getResource())
+        {
+            jedis.publish("update", gson.toJson(message));
         }
     }
 

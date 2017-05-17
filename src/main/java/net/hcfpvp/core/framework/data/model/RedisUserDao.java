@@ -105,41 +105,26 @@ public class RedisUserDao extends RedisGenericDao<UOfflineUser>
                                                  {
                                                      String basicProfileIdentifier = basicIdentifier + ":" + k;
 
-                                                     if (!jedis.exists(basicProfileIdentifier))
-                                                     {
-                                                         return;
-                                                     }
-
-                                                     if (profileHandler.getProfiles()
-                                                                       .keySet()
-                                                                       .stream()
-                                                                       .noneMatch(s -> s.equalsIgnoreCase(k)))
-                                                     {
-                                                         return;
-                                                     }
-
-                                                     Profile profile = null;
+                                                     Profile p = null;
                                                      try
                                                      {
-                                                         profile = profileHandler.getProfiles()
-                                                                                 .entrySet()
-                                                                                 .stream()
-                                                                                 .filter((e) -> e.getKey()
-                                                                                                 .equalsIgnoreCase(k))
-                                                                                 .findAny()
-                                                                                 .get()
-                                                                                 .getValue()
-                                                                                 .getConstructor(OfflineUser.class)
-                                                                                 .newInstance(user);
+                                                         p = v.getConstructor(OfflineUser.class).newInstance(user);
+
+                                                         if (!jedis.exists(basicProfileIdentifier))
+                                                         {
+                                                             p.getFields().forEach(f -> {
+                                                                 jedis.hset(basicProfileIdentifier, f.getKey(), getGson().toJson(f.getDefaultValue(), f.getToken().getType()));
+                                                             });
+                                                         }
                                                      }
                                                      catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored)
                                                      {
                                                          ignored.printStackTrace();
                                                      }
 
-                                                     if (profile != null)
+                                                     if (p != null)
                                                      {
-                                                         final Profile finalProfile = profile;
+                                                         final Profile finalProfile = p;
 
                                                          jedis.hgetAll(basicProfileIdentifier).forEach((fk, fv) ->
                                                                                                        {
@@ -172,7 +157,16 @@ public class RedisUserDao extends RedisGenericDao<UOfflineUser>
                                                                                                                                                     .getType()));
                                                                                                        });
 
-                                                         user.getProfiles().put(k, profile);
+                                                         if (finalProfile.getValues().size() != finalProfile.getFields().size())
+                                                         {
+                                                             finalProfile.getFields().forEach(f -> {
+                                                                 finalProfile.getValues()
+                                                                             .computeIfAbsent(f.getKey(),
+                                                                                              k1 -> f.getDefaultValue());
+                                                            });
+                                                         }
+
+                                                         user.getProfiles().put(k, p);
                                                      }
                                                  });
 
