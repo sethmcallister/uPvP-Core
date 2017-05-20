@@ -123,7 +123,15 @@ public class UModuleManager implements ModuleManager
             URLClassLoader child = new URLClassLoader(new URL[] { path.toUri().toURL() }, getClass().getClassLoader());
             Class mainClass = Class.forName(main, true, child);
 
-            PluginModule module = (PluginModule) mainClass.newInstance();
+            PluginModule module;
+            try
+            {
+                module = (PluginModule) mainClass.newInstance();
+            }
+            catch (Exception e)
+            {
+                throw new ModuleLoadException("Failed to call empty constructor of module " + name + " version " + version + " at path " + main + "!");
+            }
 
             Field nameField = module.getClass().getSuperclass().getDeclaredField("name");
             nameField.setAccessible(true);
