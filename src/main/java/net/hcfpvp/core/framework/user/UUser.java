@@ -36,6 +36,15 @@ public class UUser extends UOfflineUser implements User, OfflineUser, CommandCal
         super(uniqueId, profiles);
     }
 
+    public void load(OfflineUser user)
+    {
+        getProfiles().forEach((name, profile) -> {
+           profile.getFields().forEach(pf -> {
+               profile.getValues().put(pf.getKey(), user.getProfile(name).getObjectValue(pf.getKey()));
+           });
+        });
+    }
+
     @Override
     public void kick(String s)
     {

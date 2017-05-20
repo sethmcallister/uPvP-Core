@@ -76,7 +76,8 @@ public class UModuleManager implements ModuleManager
                                                                          catch (ModuleLoadException e)
                                                                          {
                                                                              System.out.println(
-                                                                                     "Error loading module %s!");
+                                                                                     "Error loading module " + p.getFileName().toString() + "!");
+                                                                             e.printStackTrace();
                                                                          }
                                                                      });
         }

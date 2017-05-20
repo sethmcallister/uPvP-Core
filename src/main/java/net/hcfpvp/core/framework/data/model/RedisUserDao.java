@@ -39,7 +39,7 @@ public class RedisUserDao extends RedisGenericDao<UOfflineUser>
 
                            jedis.subscribe(new MessageListener("user", (msg) ->
                            {
-                               for (int i = 0; i < mng.getUsers().size(); i++)
+                               /*for (int i = 0; i < mng.getUsers().size(); i++)
                                {
                                    User u = mng.getUsers().get(i);
 
@@ -48,6 +48,14 @@ public class RedisUserDao extends RedisGenericDao<UOfflineUser>
                                        mng.getUsers()
                                           .set(i, new UUser(u.getUniqueId(),
                                                             mng.getDao().find(msg.getId()).getProfiles().values()));
+                                   }
+                               }*/
+
+                               for (User user : mng.getUsers())
+                               {
+                                   if (user.getUniqueId().equals(msg.getId()))
+                                   {
+                                       ((UUser) user).load(mng.getDao().find(msg.getId()));
                                    }
                                }
                            }), "update");

@@ -78,7 +78,7 @@ public abstract class RedisGenericDao<T> implements GenericDao<T>
     {
         try (Jedis connection = getConnection())
         {
-            Set<String> keys = connection.keys(getKeyWithoutIdentifier());
+            Set<String> keys = connection.keys(getKeyWithoutIdentifier() + ":*");
 
             return keys.stream()
                        .map(k -> (T) gson.fromJson(connection.get(k), type))
