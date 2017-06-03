@@ -9,7 +9,7 @@ import net.hcfpvp.api.framework.module.event.events.UserDisconnectedEvent;
 import net.hcfpvp.api.framework.user.OfflineUser;
 import net.hcfpvp.api.framework.user.User;
 import net.hcfpvp.api.framework.user.UserManager;
-import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
+import net.hcfpvp.api.profiles.core.StandardProfileKey;
 import net.hcfpvp.core.framework.data.RedisDatabaseManager;
 import net.hcfpvp.core.framework.data.model.RedisUserDao;
 import net.hcfpvp.core.framework.util.UUIDFetcher;
@@ -94,8 +94,7 @@ public class UUserManager implements UserManager
 
             if (ban == null || !ban.isActive())
             {
-                ban = API.getBanManager().getBan(user.getStandardProfile().getEntityValue(
-                        StandardProfileKey.MOST_RECENT_IP.getKey()));
+//                ban = API.getBanManager().getBan(user.getStandardProfile().getEntityValue(StandardProfileKey.MOST_RECENT_IP.getKey()));
             }
         }
 
@@ -110,7 +109,6 @@ public class UUserManager implements UserManager
         }
 
         API.getModuleManger().triggerEvent(new UserConnectedEvent((User) user));
-
         return true;
     }
 

@@ -6,12 +6,10 @@ import net.hcfpvp.api.framework.entity.IPEntity;
 import net.hcfpvp.api.framework.permission.Group;
 import net.hcfpvp.api.framework.permission.Rank;
 import net.hcfpvp.api.framework.user.OfflineUser;
-import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
 import net.hcfpvp.api.profiles.Profile;
-import net.hcfpvp.core.framework.core.UCore;
+import net.hcfpvp.api.profiles.core.StandardProfileKey;
 import net.hcfpvp.core.framework.permission.URank;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**

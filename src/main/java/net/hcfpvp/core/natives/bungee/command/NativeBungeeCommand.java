@@ -46,8 +46,7 @@ public class NativeBungeeCommand extends Command
 
         User user = API.getUserManager().findByUniqueId(((ProxiedPlayer) sender).getUniqueId());
 
-        if (user.getRank().getGroup().getLadder() < listener.getMinGroup().getLadder() &&
-            user.getRank().getGroup().getLadder() < listener.getMinGroup().getLadder())
+        if (user.getRank().getGroup().getLadder() < listener.getMinGroup().getLadder() && user.getRank().getGroup().getLadder() < listener.getMinGroup().getLadder())
         {
             sender.sendMessage(ChatColor.RED + "You do not have enough permissions to execute that command!");
             return;

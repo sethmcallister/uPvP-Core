@@ -17,8 +17,8 @@ public class PlayerSwitchServerEventListener implements Listener
     {
         User user = API.getUserManager().findByUniqueId(e.getPlayer().getUniqueId());
 
-        StandardProfile profile = (StandardProfile) user.getStandardProfile();
-        profile.setCurrentServer(e.getPlayer().getServer().getInfo().getName().toLowerCase());
+//        StandardProfile profile = (StandardProfile) user.getStandardProfile();
+//        profile.setCurrentServer(e.getPlayer().getServer().getInfo().getName().toLowerCase());
 
         user.update();
     }

@@ -43,8 +43,7 @@ public class NativeBukkitCommand extends BukkitCommand
 
         User user = API.getUserManager().findByUniqueId(((Player) sender).getUniqueId());
 
-        if (user.getRank().getGroup().getLadder() < listener.getMinGroup().getLadder() &&
-            user.getRank().getGroup().getLadder() < listener.getMinGroup().getLadder())
+        if (user.getRank().getGroup().getLadder() <= listener.getMinGroup().getLadder() && user.getRank().getGroup().getLadder() <= listener.getMinGroup().getLadder())
         {
             sender.sendMessage(ChatColor.RED + "You do not have enough permissions to execute that command!");
             return false;

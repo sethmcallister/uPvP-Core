@@ -6,13 +6,12 @@ import net.hcfpvp.api.framework.module.command.CommandCaller;
 import net.hcfpvp.api.framework.permission.Group;
 import net.hcfpvp.api.framework.user.OfflineUser;
 import net.hcfpvp.api.framework.user.User;
-import net.hcfpvp.api.framework.user.profile.StandardProfileKey;
 import net.hcfpvp.api.profiles.Profile;
 import net.hcfpvp.api.profiles.core.StandardProfile;
+import net.hcfpvp.api.profiles.core.StandardProfileKey;
 import net.hcfpvp.core.framework.permission.URank;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.UUID;
 
 /**
